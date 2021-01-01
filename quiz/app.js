@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (req, res) {
-  res.render("index", { title: "Express" });
+  res.render("index");
 });
 app.get("/api/v1/quizzes", (req, res) => {
   const quizList = [];
@@ -30,7 +30,6 @@ app.get("/api/v1/quizzes", (req, res) => {
       for (let i = 0; i < data.results.length; i++) {
         quizList.push(data.results[i]);
       }
-      console.log(quizList);
     })
     .then(() => res.json(quizList));
 });
