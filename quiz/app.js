@@ -4,9 +4,16 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const fetch = require("node-fetch");
-
+const mongoose = require('mongoose');
 const app = express();
+const quizzesController = require("./controllers/quizzesController");
+
+// mongoDB setup
+mongoose.connect('mongodb://localhost:27017/quiz_app', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -18,21 +25,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", function (req, res) {
-  res.render("index");
-});
-app.get("/api/v1/quizzes", (req, res) => {
-  const quizList = [];
-  // クイズデータをTriviaAPIで取得
-  fetch("https://opentdb.com/api.php?amount=10")
-    .then((response) => response.json())
-    .then((data) => {
-      for (let i = 0; i < data.results.length; i++) {
-        quizList.push(data.results[i]);
-      }
-    })
-    .then(() => res.json(quizList));
-});
+app.get(
+  "/",
+  quizzesController.initQuizList,
+  quizzesController.fetchQuizListFromTriviaDB,
+  quizzesController.showHomePage
+);
+
+app.get("/api/v1/quizzes", quizzesController.getQuizList);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

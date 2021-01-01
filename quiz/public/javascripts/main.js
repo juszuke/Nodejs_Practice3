@@ -16,26 +16,6 @@ let currentNum = 0;
 let isAnswered;
 let score = 0;
 
-// 初期化する処理
-const initQuizList = () => {
-  quizSet = [];
-  currentNum = 0;
-  score = 0;
-};
-
-// 初期化＋ホーム画面へ移動する処理
-// eslint-disable-next-line no-unused-vars
-const showHome = () => {
-  title.textContent = "ようこそ";
-  category.textContent = "";
-  difficulty.textContent = "";
-  question.textContent = "以下のボタンをクリック";
-  home.classList.add("none");
-  start.classList.remove("none");
-
-  initQuizList();
-};
-
 // クイズデータを外部APIから取得する処理
 const fetchQuizList = () => {
   return fetch("/api/v1/quizzes")
