@@ -2,6 +2,7 @@
 
 const Quiz = require('../models/quiz');
 const fetch = require("node-fetch");
+let quizList = [];
 
 module.exports = {
   fetchQuizListFromTriviaDB: (req, res, next) => {
@@ -10,49 +11,33 @@ module.exports = {
     .then((data) => {
       for (let i = 0; i < data.results.length; i++) {
         const quiz = data.results;
-        const newQuiz = new Quiz({
-          category: quiz[i].category,
-          type: quiz[i].type,
-          difficulty: quiz[i].difficulty,
-          question: quiz[i].question,
-          correct_answer: quiz[i].correct_answer,
-          incorrect_answers: quiz[i].incorrect_answers
-        });
-        newQuiz.save()
+        quizList[i] = new Quiz(
+          quiz[i].category,
+          quiz[i].type,
+          quiz[i].difficulty,
+          quiz[i].question,
+          quiz[i].correct_answer,
+          quiz[i].incorrect_answers
+        );
       }
     })
     .then(() => {
-      console.log("quiz saved")
+      console.log("quiz fetched")
     })
     .catch((error) => {
-      res.send(error)
+      res.send(error);
     });
     next();
   },
 
   getQuizList: (req, res) => {
-    Quiz.find({})
-      .exec()
-      .then((quizList) => {
-        res.json(quizList)
-      })
-      .catch((error) => {
-        console.log(error.message);
-        return [];
-      })
-      .then(() => {
-        console.log("quiz is ready");
-      });
-  },
+      res.json(quizList);
+      console.log("quiz is ready");
+    },
 
   initQuizList: (req, res, next) => {
-    Quiz.remove({})
-      .then(() => {
-        console.log("quiz removed");
-      })
-      .catch((error) => {
-        res.send(error)
-      });
+    quizList = [];
+    console.log("quiz removed");
     next();
   },
 

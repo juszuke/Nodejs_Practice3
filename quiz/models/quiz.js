@@ -1,15 +1,21 @@
 'use strict';
 
-const mongoose = require('mongoose');
-const { Schema } = require('mongoose');
+module.exports = class Quiz{
+  constructor (
+    category,
+    type,
+    difficulty,
+    question,
+    correct_answer,
+    incorrect_answers
+  )
+  {
+    this.category = category;
+    this.type = type;
+    this.difficulty = difficulty;
+    this.question = question;
+    this.correct_answer = correct_answer;
+    this.incorrect_answers = incorrect_answers;
+  }
+}
 
-const quizSchema = new Schema({
-  category: String,
-  type: String,
-  difficulty: String,
-  question: String,
-  correct_answer: String,
-  incorrect_answers: Array
-});
-
-module.exports = mongoose.model('Quiz', quizSchema);
